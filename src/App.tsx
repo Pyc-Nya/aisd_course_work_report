@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './style.css';
 import data from './assets/model_results.json';
 
@@ -122,7 +122,7 @@ const RegressionReport: React.FC = () => {
   };
 
   return (
-    <>
+    <div className='container'>
       <button onClick={downloadPdf}>Download PDF</button>
       <div className={CLS.body} ref={reportRef}>
         <h1 className={CLS.h1}>Отчёт регрессионного анализа</h1>
@@ -133,52 +133,85 @@ const RegressionReport: React.FC = () => {
           <React.Fragment key={op}>
             <div className={CLS.caption}>Операция: {op}</div>
   
-            <table className={CLS.table}>
-              <thead className={CLS.thead}>
-                <tr>
-                  <th>deg</th>
-                  <th>a0</th>
-                  <th>a1</th>
-                  <th>a2</th>
-                  <th>a3</th>
-                  <th>a4</th>
-                  <th>D[X]</th>
-                  <th>СКО</th>
-                  <th>Код</th>
-                  <th>Пояснение</th>
-                  <th>Комментарий</th>
-                </tr>
-              </thead>
-  
-              <tbody>
-                {models.map((m, idx) => (
-                  <tr key={idx} className={idx % 2 ? CLS.tbodyEven : undefined}>
-                    <td>{m.degree}</td>
-                    {m.coef.map((c, i) => (
-                      <td key={i}>{fmt(c)}</td>
-                    ))}
-                    <td>{fmt(m.var)}</td>
-                    <td>{fmt(m.sd)}</td>
-                    <td>{m.code}</td>
-                    <td>{explain(m.code)}</td>
-                    <td>{m.comment || '\u00A0'}</td>
+            <div className='table-container'>
+              <table className={CLS.table}>
+                <thead className={CLS.thead}>
+                  <tr>
+                    <th>deg</th>
+                    <th>a0</th>
+                    <th>a1</th>
+                    <th>a2</th>
+                    <th>a3</th>
+                    <th>a4</th>
+                    <th>D[X]</th>
+                    <th>СКО</th>
+                    <th>Код</th>
+                    <th>Пояснение</th>
+                    <th>Комментарий</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+    
+                <tbody>
+                  {models.map((m, idx) => (
+                    <tr key={idx} className={idx % 2 ? CLS.tbodyEven : undefined}>
+                      <td>{m.degree}</td>
+                      {m.coef.map((c, i) => (
+                        <td key={i}>{fmt(c)}</td>
+                      ))}
+                      <td>{fmt(m.var)}</td>
+                      <td>{fmt(m.sd)}</td>
+                      <td>{m.code}</td>
+                      <td>{explain(m.code)}</td>
+                      <td>{m.comment || '\u00A0'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
   
-            <p style={{
+            <div style={{
               width: "70%",
               margin: '0 auto'
             }}>
-              <img
-                className={CLS.img}
-                src={new URL(`./assets/${image}`, import.meta.url).href}
-                alt={`график ${op}`}
-              />
-            </p>
+              <ImageModal src={new URL(`./assets/${image}`, import.meta.url).href} />
+            </div>
           </React.Fragment>
         ))}
+      </div>
+    </div>
+  );
+};
+
+const ImageModal = ({ src }: { src: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.code === "Escape") {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('keydown', handleEsc);
+
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+    }
+  }, []);
+
+  return (
+    <>
+      <img
+        src={src}
+        alt={`график`}
+        onClick={() => setIsOpen(true)}
+        style={{ cursor: 'pointer', width: '100%', maxWidth: "600px" }}
+      />
+      <div className="modal" style={{ visibility: isOpen ? 'visible' : 'hidden' }} onClick={() => setIsOpen(false)}>
+        <div className="close-modal">&times;</div>
+        <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <img src={src} alt={`график`} style={{ width: '95%' }} />
+        </div>
       </div>
     </>
   );

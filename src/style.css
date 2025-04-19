@@ -3,6 +3,10 @@ body {
   margin: 0;
   background: #fff;
 }
+.container {
+  margin: 0 auto;
+  width: 70%;
+}
 .rep-body {
   font: 16px/1.5 "Segoe UI", sans-serif;
   padding: 1rem 2rem;
@@ -11,23 +15,17 @@ body {
 .rep-title {
   text-align: center;
   margin-top: 0;
-  display: block;
-  width: 70%;
-  margin: 0 auto;
 }
 
 .rep-section {
   margin-bottom: 2.2rem;
   text-align: justify;
   display: block;
-  margin: 0 auto;
-  width: 70%;
 }
 
 .rep-table {
   border-collapse: collapse;
   margin: 1rem auto;
-  width: 70%;
   overflow-x: auto;
 }
 
@@ -36,9 +34,6 @@ body {
   font-weight: 600;
   text-align: left;
   margin: 0.6rem 0;
-  display: block;
-  width: 70%;
-  margin: 0 auto;
 }
 
 th,
@@ -65,20 +60,36 @@ th {
   max-width: 600px;
 }
 
-/* тёмная тема */
-/* @media (prefers-color-scheme: dark) {
-  .rep-body {
-    background: #1e1e1e;
-    color: #e4e4e4;
+.table-container {
+  overflow-x: auto;
+  border: 1px solid #000;
+  padding: 10px;
+}
+
+.modal {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.close-modal {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2.5rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 100%;
   }
-  .rep-table th,
-  .rep-table td {
-    border-color: #555;
-  }
-  th {
-    background: #2c2c2c;
-  }
-  .rep-row-even td {
-    background: #262626;
-  }
-} */
+}
